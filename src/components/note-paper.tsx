@@ -14,24 +14,43 @@ const colorOptions = [
   { name: 'Pink', value: 'bg-pink-100' },
 ]
 
+const getStackColors = (color: string) => {
+  switch (color) {
+    case 'bg-white':
+      return ['bg-stone-50/80', 'bg-white/90']
+    case 'bg-yellow-100':
+      return ['bg-yellow-200/70', 'bg-yellow-200/80']
+    case 'bg-blue-100':
+      return ['bg-blue-200/70', 'bg-blue-200/80']
+    case 'bg-green-100':
+      return ['bg-green-200/70', 'bg-green-200/80']
+    case 'bg-pink-100':
+      return ['bg-pink-200/70', 'bg-pink-200/80']
+    default:
+      return ['bg-stone-50/80', 'bg-white/90']
+  }
+}
+
 export const NotePaper: React.FC<NotePaperProps> = ({ onAddNote }) => {
   const [color, setColor] = useState(colorOptions[0].value)
+
+  const stackColors = getStackColors(color)
 
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="group z-10 -rotate-6 transform transition-all duration-300 ease-in-out hover:-translate-y-6 hover:rotate-6 hover:scale-110">
+        <div className="group z-10 -rotate-6 scale-105 transform transition-all duration-300 ease-in-out hover:-translate-y-6 group-hover:rotate-12 group-hover:scale-110">
           {/* Paper stack effect */}
-          <div className="relative w-32 h-32 ">
+          <div className="relative w-32 h-32">
             {/* Bottom papers with shadows */}
-            {[2, 1].map((index) => (
+            {[2, 1].map((index, i) => (
               <div
                 key={index}
-                className={`absolute bottom-${index} left-${index} w-full h-full ${color} opacity-80 rounded-sm transform rotate-${index}*2 transition-all duration-300 ease-in-out group-hover:rotate-${index * 2} group-hover:translate-x-${index} group-hover:-translate-y-${index}`}
+                className={`absolute bottom-${index} left-${index} w-full h-full ${stackColors[i]} rounded-sm transform rotate-(${index * 3}) transition-all duration-300 ease-in-out group-hover:rotate-${index * 6} group-hover:translate-x-${index * 2} group-hover:-translate-y-${index * 2}`}
               ></div>
             ))}
             {/* Top paper with paperclip */}
-            <div className={`relative w-full h-full ${color} shadow-md rounded-sm transform transition-all duration-300 ease-in-out group-hover:rotate-6 group-hover:translate-x-2 group-hover:-translate-y-2`}>
+            <div className={`relative w-full h-full ${color} shadow-md rounded-sm transform transition-all duration-300 ease-in-out group-hover:rotate-8 group-hover:translate-x-2 group-hover:-translate-y-2 group-hover:shadow-2xl`}>
               {/* Paper texture */}
               <div className="absolute inset-0 bg-gradient-to-br from-transparent via-stone-700/5 to-transparent rounded-sm"></div>
               {/* Organic scribbled lines */}

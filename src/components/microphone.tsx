@@ -10,8 +10,6 @@ export const Microphone: React.FC<MicrophoneProps> = ({ onClick }) => {
       <div className="w-20 h-48 flex flex-col items-center transition-all duration-300 ease-in-out group-hover:-translate-y-2 group-hover:rotate-6">
         {/* Microphone Head */}
         <div className="w-20 h-20 relative z-10">
-          {/* Gradient outline for microphone head */}
-          <div className="absolute -inset-[1px] rounded-full bg-gradient-to-r from-gray-400/30 via-gray-500/30 to-gray-400/30" />
           {/* Outer frame */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-b from-gray-300 to-gray-400">
             {/* Mesh pattern container */}
