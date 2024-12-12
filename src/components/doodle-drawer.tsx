@@ -2,11 +2,23 @@ import React, { useState, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Eraser, Pencil } from 'lucide-react'
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover"
 
 interface DoodleDrawerProps {
   onClose: () => void
   onDoodleAdd: (doodleUrl: string) => void
 }
+
+const colors = [
+  '#000000', // Black
+  '#4B5563', // Gray
+  '#EF4444', // Red
+  '#F59E0B', // Orange
+  '#10B981', // Green
+  '#3B82F6', // Blue
+  '#8B5CF6', // Purple
+  '#EC4899', // Pink
+]
 
 export const DoodleDrawer: React.FC<DoodleDrawerProps> = ({ onClose, onDoodleAdd }) => {
   const svgRef = useRef<SVGSVGElement>(null)
@@ -79,39 +91,38 @@ export const DoodleDrawer: React.FC<DoodleDrawerProps> = ({ onClose, onDoodleAdd
     const svg = svgRef.current
     if (!svg) return
 
-    // Create a temporary canvas to convert SVG to PNG
-    const canvas = document.createElement('canvas')
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const svgData = new XMLSerializer().serializeToString(svg)
-    const img = new Image()
+    // Clone the SVG to remove event listeners and refs
+    const clonedSvg = svg.cloneNode(true) as SVGSVGElement
     
-    img.onload = () => {
-      canvas.width = svg.clientWidth
-      canvas.height = svg.clientHeight
-      ctx.fillStyle = 'white'
-      ctx.fillRect(0, 0, canvas.width, canvas.height)
-      ctx.drawImage(img, 0, 0)
-      const doodleUrl = canvas.toDataURL('image/png')
-      onDoodleAdd(doodleUrl)
-      onClose()
-    }
-
-    img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
+    // Calculate the viewBox based on the SVG's dimensions
+    const rect = svg.getBoundingClientRect()
+    clonedSvg.setAttribute('viewBox', `0 0 ${rect.width} ${rect.height}`)
+    clonedSvg.setAttribute('width', '100%')
+    clonedSvg.setAttribute('height', '100%')
+    clonedSvg.style.backgroundColor = 'transparent'
+    
+    // Convert to string
+    const svgData = new XMLSerializer().serializeToString(clonedSvg)
+    const svgBlob = new Blob([svgData], { type: 'image/svg+xml' })
+    const svgUrl = URL.createObjectURL(svgBlob)
+    
+    onDoodleAdd(svgUrl)
+    onClose()
   }
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
       <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Draw a Doodle</DialogTitle>
+          <DialogTitle>Draw a doodle</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4">
-          <div className="w-full aspect-[4/3] bg-white rounded-md border-2 border-stone-200">
+          <div className="w-full aspect-[4/3] bg-white rounded-xl border-2 border-stone-200">
             <svg
               ref={svgRef}
               className="w-full h-full cursor-crosshair"
+              viewBox="0 0 400 300"
+              preserveAspectRatio="xMidYMid meet"
               onMouseDown={startDrawing}
               onMouseMove={draw}
               onMouseUp={stopDrawing}
@@ -140,27 +151,44 @@ export const DoodleDrawer: React.FC<DoodleDrawerProps> = ({ onClose, onDoodleAdd
               )}
             </svg>
           </div>
-          <div className="flex gap-2">
-            <div className="relative w-10 h-10">
+          <div className="flex gap-4 items-center">
+            <Popover>
+              <PopoverTrigger asChild>
+                <div className="relative w-10 h-10 group cursor-pointer">
+                  <div 
+                    className="w-10 h-10 rounded-full border-2 border-stone-200 transition-transform group-hover:scale-110 shadow-sm"
+                    style={{ backgroundColor: color }}
+                  />
+                </div>
+              </PopoverTrigger>
+              <PopoverContent className="w-auto p-2" sideOffset={5}>
+                <div className="grid grid-cols-4 gap-2">
+                  {colors.map((c) => (
+                    <button
+                      key={c}
+                      className={`w-8 h-8 rounded-full border-2 transition-transform hover:scale-110 ${
+                        c === color ? 'border-stone-900' : 'border-stone-200'
+                      }`}
+                      style={{ backgroundColor: c }}
+                      onClick={() => setColor(c)}
+                    />
+                  ))}
+                </div>
+              </PopoverContent>
+            </Popover>
+            <div className="relative w-32 group">
               <input
-                type="color"
-                value={color}
-                onChange={(e) => setColor(e.target.value)}
-                className="absolute inset-0 w-full h-full rounded-full cursor-pointer opacity-0"
+                type="range"
+                min="1"
+                max="20"
+                value={lineWidth}
+                onChange={(e) => setLineWidth(parseInt(e.target.value))}
+                className="w-full h-2 bg-stone-100 rounded-full appearance-none cursor-pointer accent-stone-900 hover:accent-stone-700"
               />
-              <div 
-                className="w-10 h-10 rounded-full border-2 border-stone-200"
-                style={{ backgroundColor: color }}
-              />
+              <div className="absolute -top-6 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity bg-stone-900 text-white px-2 py-1 rounded text-xs">
+                {lineWidth}px
+              </div>
             </div>
-            <input
-              type="range"
-              min="1"
-              max="20"
-              value={lineWidth}
-              onChange={(e) => setLineWidth(parseInt(e.target.value))}
-              className="w-32"
-            />
             <Button
               variant={isErasing ? "secondary" : "outline"}
               size="icon"

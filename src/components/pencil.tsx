@@ -6,8 +6,8 @@ interface PencilProps {
 
 export const Pencil: React.FC<PencilProps> = ({ onClick }) => {
   return (
-    <div className="group z-10 transform translate-y-10 transition-all duration-300 ease-in-out hover:-translate-y-4 hover:rotate-6">
-      <div className="w-8 h-48 transition-all duration-300 ease-in-out group-hover:-translate-y-4 group-hover:flex flex-col items-center">
+    <div className="group z-10 transform translate-y-10 transition-all duration-300 drop-shadow-2xl ease-in-out hover:scale-105 hover:-translate-y-2 hover:rotate-6">
+      <div className="w-8 h-48 transition-all duration-300 ease-in-out flex-col items-center">
         {/* Pencil tip */}
         <div className="w-full h-8 bg-[#E5C4A5] clip-path-pencil-tip relative">
           <div className="absolute top-0 left-1/2 transform -translate-x-1/2 w-4 h-4 bg-gradient-to-r from-orange-500 via-orange-400 to-orange-500"></div>

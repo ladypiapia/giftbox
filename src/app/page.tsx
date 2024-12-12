@@ -18,8 +18,9 @@ export interface LetterItem {
   content: string | Blob
   position: { x: number; y: number }
   rotation: number
-  caption?: string
+  scale?: number
   color?: string
+  caption?: string
 }
 
 export default function DigitalLetterComposer() {

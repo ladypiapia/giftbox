@@ -20,14 +20,14 @@ export const NotePaper: React.FC<NotePaperProps> = ({ onAddNote }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="group z-10 transform transition-all duration-300 ease-in-out hover:-translate-y-6">
+        <div className="group z-10 -rotate-6 transform transition-all duration-300 ease-in-out hover:-translate-y-6 hover:rotate-6 hover:scale-110">
           {/* Paper stack effect */}
-          <div className="relative w-32 h-32">
+          <div className="relative w-32 h-32 ">
             {/* Bottom papers with shadows */}
             {[2, 1].map((index) => (
               <div
                 key={index}
-                className={`absolute bottom-${index} left-${index} w-full h-full ${color} opacity-80 rounded-sm transform rotate-${index} transition-all duration-300 ease-in-out group-hover:rotate-${index * 2} group-hover:translate-x-${index} group-hover:-translate-y-${index} shadow-lg`}
+                className={`absolute bottom-${index} left-${index} w-full h-full ${color} opacity-80 rounded-sm transform rotate-${index}*2 transition-all duration-300 ease-in-out group-hover:rotate-${index * 2} group-hover:translate-x-${index} group-hover:-translate-y-${index}`}
               ></div>
             ))}
             {/* Top paper with paperclip */}
@@ -62,12 +62,12 @@ export const NotePaper: React.FC<NotePaperProps> = ({ onAddNote }) => {
           ></button>
         </div>
       </PopoverTrigger>
-      <PopoverContent className="w-auto p-0 m-4 bg-white" sideOffset={5}>
+      <PopoverContent className="w-auto p-0 m-8 rounded-2xl bg-white shadow-lg" sideOffset={5}>
         <div className="grid grid-cols-5 gap-2 p-2">
           {colorOptions.map((option) => (
             <Button
               key={option.value}
-              className={`w-8 h-8 rounded-full ${option.value} hover:brightness-95 transition-colors duration-200`}
+              className={`w-10 h-10 rounded-full border-2 border-stone-200 ${option.value} hover:brightness-95 transition-colors duration-200`}
               onClick={() => setColor(option.value)}
               aria-label={`Set note color to ${option.name}`}
             />

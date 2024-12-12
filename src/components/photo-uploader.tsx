@@ -45,23 +45,35 @@ export const PhotoUploader: React.FC<PhotoUploaderProps> = ({ onClose, onPhotoAd
 
   return (
     <Dialog open={true} onOpenChange={onClose}>
-      <DialogContent>
+      <DialogContent className="sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle>Add Photo</DialogTitle>
+          <DialogTitle>Add a photo</DialogTitle>
         </DialogHeader>
-        <div className="flex flex-col space-y-4">
-          <Button onClick={() => fileInputRef.current?.click()}>
-            <Upload className="mr-2 h-4 w-4" /> Upload Photo
-          </Button>
-          <Button onClick={handleCameraCapture}>
-            <Camera className="mr-2 h-4 w-4" /> Take Photo
-          </Button>
+        <div className="grid gap-4">
+          <div className="grid grid-cols-2 gap-4">
+            <Button 
+              variant="light"
+              onClick={() => fileInputRef.current?.click()}
+              className="flex flex-col gap-2 h-auto py-4 rounded-xl"
+            >
+              <Upload className="h-8 w-8 text-stone-400" />
+              <span className="text-sm">Choose file</span>
+            </Button>
+            <Button 
+              variant="light"
+              onClick={handleCameraCapture}
+              className="flex flex-col gap-2 h-auto py-6 rounded-xl"
+            >
+              <Camera className="h-8 w-8 text-stone-400" />
+              <span className="text-sm t">Take photo</span>
+            </Button>
+          </div>
           <input
             type="file"
             ref={fileInputRef}
-            onChange={handleFileChange}
-            accept="image/*"
             className="hidden"
+            accept="image/*"
+            onChange={handleFileChange}
           />
         </div>
       </DialogContent>

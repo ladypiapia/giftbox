@@ -36,6 +36,9 @@ export default {
           foreground: "hsl(var(--accent-foreground))",
         },
       },
+      animation: {
+        'spin-slow': 'spin 8s linear infinite',
+      }
     },
   },
   plugins: [],
