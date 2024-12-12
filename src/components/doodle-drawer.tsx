@@ -1,4 +1,4 @@
-import React, { useRef, useState, useEffect } from 'react'
+import React, { useState, useRef } from 'react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog"
 import { Eraser, Pencil } from 'lucide-react'
@@ -9,82 +9,96 @@ interface DoodleDrawerProps {
 }
 
 export const DoodleDrawer: React.FC<DoodleDrawerProps> = ({ onClose, onDoodleAdd }) => {
-  const canvasRef = useRef<HTMLCanvasElement>(null)
+  const svgRef = useRef<SVGSVGElement>(null)
   const [isDrawing, setIsDrawing] = useState(false)
   const [color, setColor] = useState('#000000')
   const [lineWidth, setLineWidth] = useState(5)
   const [isErasing, setIsErasing] = useState(false)
+  const [paths, setPaths] = useState<string[]>([])
+  const [currentPath, setCurrentPath] = useState<string>('')
+  const pointsRef = useRef<{ x: number; y: number }[]>([])
 
-  useEffect(() => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+  const getCoordinates = (e: React.MouseEvent<SVGSVGElement>) => {
+    const svg = svgRef.current
+    if (!svg) return { x: 0, y: 0 }
 
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    const point = svg.createSVGPoint()
+    point.x = e.clientX
+    point.y = e.clientY
+    const transformedPoint = point.matrixTransform(svg.getScreenCTM()?.inverse())
+    
+    return {
+      x: transformedPoint.x,
+      y: transformedPoint.y
+    }
+  }
 
-    ctx.fillStyle = '#ffffff'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
-  }, [])
-
-  const startDrawing = (e: React.MouseEvent<HTMLCanvasElement>) => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    ctx.beginPath()
-    ctx.moveTo(x, y)
+  const startDrawing = (e: React.MouseEvent<SVGSVGElement>) => {
+    const point = getCoordinates(e)
+    pointsRef.current = [point]
+    setCurrentPath(`M ${point.x} ${point.y}`)
     setIsDrawing(true)
   }
 
-  const draw = (e: React.MouseEvent<HTMLCanvasElement>) => {
+  const draw = (e: React.MouseEvent<SVGSVGElement>) => {
     if (!isDrawing) return
 
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const point = getCoordinates(e)
+    pointsRef.current.push(point)
 
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
+    if (pointsRef.current.length > 3) {
+      const points = pointsRef.current
+      const lastPoint = points[points.length - 1]
+      const controlPoint = points[points.length - 2]
+      const endPoint = {
+        x: (controlPoint.x + lastPoint.x) / 2,
+        y: (controlPoint.y + lastPoint.y) / 2
+      }
 
-    const rect = canvas.getBoundingClientRect()
-    const x = e.clientX - rect.left
-    const y = e.clientY - rect.top
-
-    ctx.lineTo(x, y)
-    ctx.strokeStyle = isErasing ? '#ffffff' : color
-    ctx.lineWidth = isErasing ? 20 : lineWidth
-    ctx.lineCap = 'round'
-    ctx.lineJoin = 'round'
-    ctx.stroke()
+      setCurrentPath(prev => 
+        `${prev} Q ${controlPoint.x} ${controlPoint.y}, ${endPoint.x} ${endPoint.y}`
+      )
+    }
   }
 
   const stopDrawing = () => {
+    if (currentPath) {
+      setPaths(prev => [...prev, currentPath])
+      setCurrentPath('')
+    }
     setIsDrawing(false)
+    pointsRef.current = []
   }
 
   const clearCanvas = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
-
-    const ctx = canvas.getContext('2d')
-    if (!ctx) return
-
-    ctx.fillStyle = '#ffffff'
-    ctx.fillRect(0, 0, canvas.width, canvas.height)
+    setPaths([])
+    setCurrentPath('')
   }
 
   const saveDoodle = () => {
-    const canvas = canvasRef.current
-    if (!canvas) return
+    const svg = svgRef.current
+    if (!svg) return
 
-    const doodleUrl = canvas.toDataURL('image/png')
-    onDoodleAdd(doodleUrl)
-    onClose()
+    // Create a temporary canvas to convert SVG to PNG
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+    if (!ctx) return
+
+    const svgData = new XMLSerializer().serializeToString(svg)
+    const img = new Image()
+    
+    img.onload = () => {
+      canvas.width = svg.clientWidth
+      canvas.height = svg.clientHeight
+      ctx.fillStyle = 'white'
+      ctx.fillRect(0, 0, canvas.width, canvas.height)
+      ctx.drawImage(img, 0, 0)
+      const doodleUrl = canvas.toDataURL('image/png')
+      onDoodleAdd(doodleUrl)
+      onClose()
+    }
+
+    img.src = 'data:image/svg+xml;base64,' + btoa(svgData)
   }
 
   return (
@@ -94,23 +108,51 @@ export const DoodleDrawer: React.FC<DoodleDrawerProps> = ({ onClose, onDoodleAdd
           <DialogTitle>Draw a Doodle</DialogTitle>
         </DialogHeader>
         <div className="flex flex-col items-center gap-4">
-          <canvas
-            ref={canvasRef}
-            width={400}
-            height={400}
-            className="border border-gray-300 rounded-md cursor-crosshair"
-            onMouseDown={startDrawing}
-            onMouseMove={draw}
-            onMouseUp={stopDrawing}
-            onMouseLeave={stopDrawing}
-          />
+          <div className="w-full aspect-[4/3] bg-white rounded-md border-2 border-stone-200">
+            <svg
+              ref={svgRef}
+              className="w-full h-full cursor-crosshair"
+              onMouseDown={startDrawing}
+              onMouseMove={draw}
+              onMouseUp={stopDrawing}
+              onMouseLeave={stopDrawing}
+            >
+              {paths.map((path, i) => (
+                <path
+                  key={i}
+                  d={path}
+                  stroke={isErasing ? 'white' : color}
+                  strokeWidth={lineWidth}
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              ))}
+              {currentPath && (
+                <path
+                  d={currentPath}
+                  stroke={isErasing ? 'white' : color}
+                  strokeWidth={lineWidth}
+                  fill="none"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                />
+              )}
+            </svg>
+          </div>
           <div className="flex gap-2">
-            <input
-              type="color"
-              value={color}
-              onChange={(e) => setColor(e.target.value)}
-              className="w-10 h-10"
-            />
+            <div className="relative w-10 h-10">
+              <input
+                type="color"
+                value={color}
+                onChange={(e) => setColor(e.target.value)}
+                className="absolute inset-0 w-full h-full rounded-full cursor-pointer opacity-0"
+              />
+              <div 
+                className="w-10 h-10 rounded-full border-2 border-stone-200"
+                style={{ backgroundColor: color }}
+              />
+            </div>
             <input
               type="range"
               min="1"
@@ -124,7 +166,7 @@ export const DoodleDrawer: React.FC<DoodleDrawerProps> = ({ onClose, onDoodleAdd
               size="icon"
               onClick={() => setIsErasing(!isErasing)}
             >
-              {isErasing ? <Eraser className="h-4 w-4" /> : <Pencil className="h-4 w-4" />}
+              {isErasing ? <Pencil className="h-4 w-4" /> : <Eraser className="h-4 w-4" />}
             </Button>
             <Button onClick={clearCanvas} variant="outline">
               Clear
