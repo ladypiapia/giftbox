@@ -7,10 +7,9 @@ import { Toolbar } from '@/components/toolbar'
 import { LetterCanvas } from '@/components/letter-canvas'
 import { PhotoUploader } from '@/components/photo-uploader'
 import { VoiceRecorder } from '@/components/voice-recorder'
-import { SpotifyPlayer } from '@/components/spotify-player'
 import { DoodleDrawer } from '@/components/doodle-drawer'
 import { DottedBackground } from '@/components/dotted-background'
-import { SendGiftFlow } from '@/components/send-gift-flow'
+// import { SpotifyPlayer } from '@/components/spotify-player'
 
 export interface LetterItem {
   id: string

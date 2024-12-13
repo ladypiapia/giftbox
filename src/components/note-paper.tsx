@@ -43,10 +43,10 @@ export const NotePaper: React.FC<NotePaperProps> = ({ onAddNote }) => {
           {/* Paper stack effect */}
           <div className="relative w-32 h-32">
             {/* Bottom papers with shadows */}
-            {[2, 1].map((index, i) => (
+            {[3, 2, 1].map((index, i) => (
               <div
                 key={index}
-                className={`absolute bottom-${index} left-${index} w-full h-full ${stackColors[i]} rounded-sm transform rotate-(${index * 3}) transition-all duration-300 ease-in-out group-hover:rotate-${index * 6} group-hover:translate-x-${index * 2} group-hover:-translate-y-${index * 2}`}
+                className={`absolute bottom-${index} left-${index} w-full h-full ${stackColors[i]} rounded-sm transform rotate-(${index * 3}) transition-all duration-300 ease-in-out group-hover:rotate-${index * 3} group-hover:translate-x-${index * 3} group-hover:-translate-y-${index * 3}`}
               ></div>
             ))}
             {/* Top paper with paperclip */}
@@ -64,7 +64,7 @@ export const NotePaper: React.FC<NotePaperProps> = ({ onAddNote }) => {
             {/* Realistic paperclip */}
             <div className="absolute -top-3 -right-3 w-8 h-12 transform rotate-12 z-10 transition-all duration-300 ease-in-out group-hover:translate-x-1 group-hover:-translate-y-1">
               <svg width="100%" height="100%" viewBox="0 0 32 48" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path d="M9 6C9 3.23858 11.2386 1 14 1H18C20.7614 1 23 3.23858 23 6V38C23 41.3137 20.3137 44 17 44H15C11.6863 44 9 41.3137 9 38V6Z" stroke="url(#paperclip-gradient)" strokeWidth="2"/>
+                <path d="M9 6C9 3.23858 11.2386 1 14 1H18C20.7614 1 23 3.23858 23 6V38C23 41.3137 20.3137 44 17 44H15C11.6863 44 9 41.3137 9 38V6Z" stroke="url(#paperclip-gradient)" strokeWidth="3"/>
                 <defs>
                   <linearGradient id="paperclip-gradient" x1="16" y1="1" x2="16" y2="44" gradientUnits="userSpaceOnUse">
                     <stop stopColor="#D1D5DB"/>
