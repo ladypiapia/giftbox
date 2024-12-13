@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react'
+import React, { useState, useEffect, useRef, useCallback } from 'react'
 import { Play, Pause } from 'lucide-react'
 
 interface VoiceNoteProps {
@@ -47,7 +47,7 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
     return `${mins}:${secs.toString().padStart(2, '0')}`
   }
 
-  const drawWaveform = () => {
+  const drawWaveform = useCallback(() => {
     if (!canvasRef.current || !audioBuffer) return
 
     const canvas = canvasRef.current
@@ -86,11 +86,11 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
       ctx.fillRect(x, (height - barHeight) / 2, barWidth, barHeight)
       x += barWidth + gap
     }
-  }
+  }, [audioBuffer, currentTime, duration, canvasRef])
 
   useEffect(() => {
     drawWaveform()
-  }, [currentTime, audioBuffer])
+  }, [currentTime, audioBuffer, drawWaveform])
 
   const updatePlaybackTime = () => {
     if (!audioContext || !startTimeRef.current) return
