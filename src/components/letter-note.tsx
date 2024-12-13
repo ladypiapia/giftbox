@@ -9,7 +9,7 @@ interface LetterNoteProps {
 
 export const LetterNote: React.FC<LetterNoteProps> = ({ content, onChange, color }) => {
   return (
-    <div className={`${color} p-4 shadow-lg hover:shadow-xl transition-shadow duration-300 rounded-sm w-48 z-10`}>
+    <div className={`${color} p-4 shadow-lg border border-stone-300 transition-all duration-300 ease-in-out hover:shadow-2xl rounded-md w-48 z-10`}>
       <Textarea
         value={content}
         onChange={(e) => onChange(e.target.value)}

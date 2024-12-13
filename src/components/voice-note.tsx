@@ -11,7 +11,6 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
   const [currentTime, setCurrentTime] = useState(0)
   const [audioContext, setAudioContext] = useState<AudioContext | null>(null)
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null)
-  const [error, setError] = useState<string | null>(null)
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
   const startTimeRef = useRef<number>(0)
   const animationFrameRef = useRef<number>()
@@ -30,7 +29,6 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
         setDuration(audioBuffer.duration)
       } catch (error) {
         console.error('Error decoding audio data:', error)
-        setError('Error preparing audio')
       }
     }
     reader.readAsArrayBuffer(audioBlob)
@@ -59,12 +57,11 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
     const width = canvas.width
     const height = canvas.height
     const data = audioBuffer.getChannelData(0)
-    const step = Math.ceil(data.length / 40) // Display 40 bars
+    const step = Math.ceil(data.length / 40)
     const amp = height / 2
 
     ctx.clearRect(0, 0, width, height)
 
-    // Draw bars
     const barWidth = 3
     const gap = 4
     let x = 0
@@ -82,11 +79,10 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
       const magnitude = Math.max(Math.abs(min), Math.abs(max))
       const barHeight = magnitude * amp * 0.8
 
-      // Determine if the bar should be highlighted based on current playback position
       const progress = currentTime / duration
       const isActive = i / 40 <= progress
 
-      ctx.fillStyle = isActive ? '#8B5CF6' : '#E5E7EB'
+      ctx.fillStyle = isActive ? '#EC4899' : '#EC4899' + '4D'
       ctx.fillRect(x, (height - barHeight) / 2, barWidth, barHeight)
       x += barWidth + gap
     }
@@ -135,13 +131,13 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
   }
 
   return (
-    <div className="bg-white rounded-full shadow-lg p-3 flex items-center gap-4 w-[300px]">
+    <div className="bg-white rounded-full shadow-lg hover:shadow-2xl p-3 flex items-center gap-4 border-stone-300 w-[300px] z-50">
       <button
         onClick={togglePlayPause}
         className={`w-10 h-10 rounded-full flex items-center justify-center transition-colors
           ${isPlaying 
-            ? 'bg-purple-500 text-white hover:bg-purple-600' 
-            : 'bg-purple-500 text-white hover:bg-purple-600'
+            ? 'bg-pink-500 text-white hover:bg-pink-600' 
+            : 'bg-pink-500 text-white hover:bg-pink-600'
           }`}
       >
         {isPlaying ? (
@@ -160,8 +156,8 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
         />
       </div>
 
-      <div className="text-sm text-gray-500 tabular-nums">
-        {formatTime(currentTime)}
+      <div className="text-sm text-gray-500 p-2 tabular-nums">
+        {formatTime(duration)}
       </div>
     </div>
   )

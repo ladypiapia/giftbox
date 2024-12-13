@@ -6,7 +6,7 @@ interface PolaroidProps {
 
 export const Polaroid: React.FC<PolaroidProps> = ({ onClick }) => {
   return (
-    <div className="group z-10 rotate-6 overflow-hidden transform translate-y-2 transition-all shadow-lg duration-300 ease-in-out hover:-translate-y-8 hover:shadow-2xl hover:rotate-3">
+    <div className="group z-10 rotate-6 overflow-hidden transform translate-y-2 transition-all shadow-lg duration-300 ease-in-out hover:-translate-y-8 hover:shadow-2xl hover:scale-110 hover:rotate-3">
       <div className="w-32 h-40 bg-white p-2 shadow-md border border-stone-200 rounded-md relative">
         {/* Subtle inner shadow at the top */}
         <div className="absolute inset-x-0 top-0 h-1 bg-gradient-to-b from-stone-100/50" />

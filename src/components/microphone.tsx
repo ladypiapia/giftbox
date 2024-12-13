@@ -6,10 +6,10 @@ interface MicrophoneProps {
 
 export const Microphone: React.FC<MicrophoneProps> = ({ onClick }) => {
   return (
-    <div className="group z-10 transform translate-y-10  transition-all duration-300 ease-in-out hover:-translate-y-1 hover:rotate-6">
+    <div className="group z-10 transform translate-y-10  transition-all duration-300 ease-in-out drop-shadow-lg hover:drop-shadow-2xl hover:-translate-y-1 hover:scale-105 hover:rotate-6">
       <div className="w-20 h-48 flex flex-col items-center transition-all duration-300 ease-in-out group-hover:-translate-y-2 group-hover:rotate-6">
         {/* Microphone Head */}
-        <div className="w-20 h-20 relative z-10">
+        <div className="w-20 h-20 relative z-10 border border-gray-600/40 transition-all duration-300 ease-in-out drop-shadow-lg hover:drop-shadow-2xl rounded-full">
           {/* Outer frame */}
           <div className="absolute inset-0 rounded-full bg-gradient-to-b from-gray-300 to-gray-400">
             {/* Mesh pattern container */}
@@ -25,10 +25,19 @@ export const Microphone: React.FC<MicrophoneProps> = ({ onClick }) => {
         </div>
         {/* Microphone Body */}
         <div className="w-16 h-32 relative -mt-4">
-          {/* Main body */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-32 bg-gradient-to-b from-[#1A1A1A] to-[#2C2C2C] clip-path-microphone">
-            {/* Subtle highlights */}
-            <div className="absolute inset-x-2 top-0 h-full bg-gradient-to-r from-transparent via-gray-800 to-transparent opacity-20"></div>
+          {/* Main body with 3D gradient */}
+          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-14 h-32 overflow-hidden">
+            {/* Base dark gradient */}
+            <div className="absolute inset-0 bg-gradient-to-b z-20 from-[#1A1A1A] via-[#2C2C2C] to-[#1A1A1A] clip-path-microphone">
+              {/* Left highlight */}
+              <div className="absolute inset-y-0 left-0 w-1/3 bg-gradient-to-r from-white/10 to-transparent" />
+              {/* Right shadow */}
+              <div className="absolute inset-y-0 right-0 w-1/3 bg-gradient-to-l from-black/20 to-transparent" />
+              {/* Vertical highlight */}
+              <div className="absolute inset-0 bg-gradient-to-b from-white/5 via-transparent to-black/10" />
+            </div>
+            {/* Bottom cap */}
+            <div className="absolute bottom-0 left-1/2 -translate-x-1/2 w-[70%] z-10 h-4 bg-gradient-to-b from-[#2C2C2C] to-[#1A1A1A] rounded-b-full" />
           </div>
         </div>
       </div>
@@ -39,7 +48,7 @@ export const Microphone: React.FC<MicrophoneProps> = ({ onClick }) => {
       ></button>
       <style jsx>{`
         .clip-path-microphone {
-          clip-path: polygon(0 0, 100% 0, 85% 100%, 15% 100%);
+          clip-path: polygon(0 0, 100% 0, 85% 90%, 15% 90%);
         }
       `}</style>
     </div>

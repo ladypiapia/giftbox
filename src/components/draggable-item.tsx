@@ -96,13 +96,13 @@ export const DraggableItem: React.FC<DraggableItemProps> = ({
         <Button
           variant="ghost"
           size="icon"
-          className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity p-1 z-10"
+          className="absolute -top-1 -right-1 bg-red-500 text-white rounded-full opacity-0 group-hover:opacity-100 transition-opacity p-1 h-6 w-6 hover:bg-red-600 z-50"
           onClick={(e) => {
             e.stopPropagation();
             onDelete();
           }}
         >
-          <X className="h-3 w-3" />
+          <X className="h-3 w-3 text-white" />
         </Button>
       )}
     </div>

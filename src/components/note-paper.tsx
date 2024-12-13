@@ -39,7 +39,7 @@ export const NotePaper: React.FC<NotePaperProps> = ({ onAddNote }) => {
   return (
     <Popover>
       <PopoverTrigger asChild>
-        <div className="group z-10 -rotate-6 scale-105 transform transition-all duration-300 ease-in-out hover:-translate-y-6 group-hover:rotate-12 group-hover:scale-110">
+        <div className="group z-10 -rotate-6 hover:scale-110 transform transition-all duration-300 ease-in-out hover:-translate-y-10 group-hover:rotate-12">
           {/* Paper stack effect */}
           <div className="relative w-32 h-32">
             {/* Bottom papers with shadows */}
