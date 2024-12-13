@@ -13,7 +13,7 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioBlob }) => {
   const [audioBuffer, setAudioBuffer] = useState<AudioBuffer | null>(null)
   const sourceNodeRef = useRef<AudioBufferSourceNode | null>(null)
   const startTimeRef = useRef<number>(0)
-  const animationFrameRef = useRef<number>()
+  const animationFrameRef = useRef<number | null>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
 
   useEffect(() => {
