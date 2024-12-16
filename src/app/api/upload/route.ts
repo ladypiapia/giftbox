@@ -15,6 +15,7 @@ export async function POST(request: Request): Promise<NextResponse> {
             "image/png",
             "image/gif",
             "audio/wav",
+            "image/svg+xml",
           ],
           tokenPayload: JSON.stringify({
             // optional payload

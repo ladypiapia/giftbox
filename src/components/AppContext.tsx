@@ -46,6 +46,7 @@ function useInternalGetAppContext(
 
   const [, cancel] = useDebounce(
     async () => {
+      cancel();
       console.log("saving a new state in redis for", giftId, items);
       await saveCanvas.mutateAsync(items);
     },
