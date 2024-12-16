@@ -28,8 +28,6 @@ export const VoiceNote: React.FC<VoiceNoteProps> = ({ audioUrl }) => {
         // Fetch the audio file from the URL without specific headers
         const response = await fetch(audioUrl);
 
-        console.log("response", response);
-
         if (!response.ok) {
           throw new Error("Failed to fetch audio");
         }
