@@ -3,7 +3,7 @@ import { LetterNote } from "@/components/letter-note";
 import { PhotoItem } from "@/components/photo-item";
 import { SpotifyPlayer } from "@/components/spotify-player";
 import { VoiceNote } from "@/components/voice-note";
-import { LetterItem } from "@/utils/type";
+import { LetterItem } from "@/lib/type";
 import React from "react";
 
 interface LetterCanvasProps {

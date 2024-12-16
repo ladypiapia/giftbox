@@ -3,7 +3,7 @@ import { PhotoItem } from "@/components/photo-item";
 import { SpotifyPlayer } from "@/components/spotify-player";
 import { Button } from "@/components/ui/button";
 import { VoiceNote } from "@/components/voice-note";
-import { LetterItem } from "@/utils/type";
+import { LetterItem } from "@/lib/type";
 import { X } from "lucide-react";
 import React, { useState } from "react";
 
