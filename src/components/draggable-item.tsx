@@ -63,7 +63,7 @@ export const DraggableItem: React.FC<DraggableItemProps> = ({
           />
         );
       case "voice":
-        return <VoiceNote audioBlob={item.content as Blob} />;
+        return <VoiceNote audioUrl={item.content as string} />;
       case "spotify":
         return <SpotifyPlayer spotifyUrl={item.content as string} />;
       case "doodle":
