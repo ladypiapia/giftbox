@@ -3,6 +3,7 @@
 import { AppContextProvider, useAppContext } from "@/components/AppContext";
 import { DoodleDrawer } from "@/components/doodle-drawer";
 import { DottedBackground } from "@/components/dotted-background";
+import { Header } from "@/components/Header";
 import { LetterCanvas } from "@/components/letter-canvas";
 import { PhotoUploader } from "@/components/photo-uploader";
 import { Toolbar } from "@/components/toolbar";
@@ -14,11 +15,17 @@ import { DndProvider } from "react-dnd";
 import { HTML5Backend } from "react-dnd-html5-backend";
 // import { SpotifyPlayer } from '@/components/spotify-player'
 
-export default function MainContent({ id }: { id: string }) {
+export default function MainContent({
+  id,
+  restoredState,
+}: {
+  id: string;
+  restoredState: LetterItem[] | null;
+}) {
   const queryClient = new QueryClient();
   return (
     <QueryClientProvider client={queryClient}>
-      <AppContextProvider giftId={id}>
+      <AppContextProvider giftId={id} restoredState={restoredState}>
         <DndProvider backend={HTML5Backend}>
           <DigitalLetterComposer />
         </DndProvider>
@@ -157,6 +164,9 @@ function DigitalLetterComposer() {
           currentItem={currentItem}
         />
       </main>
+      <div className="absolute top-4 right-4 z-30">
+        <Header />
+      </div>
       <div className="absolute bottom-0 left-0 right-0 z-30">
         <Toolbar
           onAddPhoto={() => setIsPhotoUploaderOpen(true)}
